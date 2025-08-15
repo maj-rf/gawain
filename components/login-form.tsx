@@ -22,13 +22,9 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
-            <div className="grid">
-              <div className="flex flex-col md:flex-row gap-2 items-center justify-center">
-                <LoginButtons />
-              </div>
-            </div>
-          </form>
+          <div className="flex flex-col md:flex-row gap-2 items-center justify-center">
+            <LoginButtons />
+          </div>
         </CardContent>
       </Card>
     </div>
