@@ -1,6 +1,5 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import { Button } from './ui/button';
 import { authClient } from '@/lib/auth-client';
 
 export default function SignoutButton() {
@@ -12,9 +11,5 @@ export default function SignoutButton() {
         onSuccess: () => router.push('/login'),
       },
     });
-  return (
-    <Button onClick={signout} variant="outline" className="w-full md:w-fit">
-      Sign Out
-    </Button>
-  );
+  return <div onClick={signout}>Sign Out</div>;
 }
