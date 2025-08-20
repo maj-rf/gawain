@@ -8,6 +8,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
+import { Bell } from 'lucide-react';
+import { Button } from './ui/button';
+import Image from 'next/image';
 
 type User = {
   id: string;
@@ -88,18 +91,61 @@ function NavbarDropdown({
   );
 }
 
+function NotificationDropdown() {
+  const notif: Array<{ id: string; message: string }> = [
+    { id: '1', message: 'hello' },
+  ];
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon" className="relative">
+          <Bell className="size-5" />
+          {notif.length > 0 && (
+            <div className="absolute top-0 right-0 bg-destructive size-4 text-background rounded-full text-xs">
+              {notif.length}
+            </div>
+          )}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="p-2 w-[300px]">
+        <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {notif.length === 0 ? (
+          <div className="w-full flex flex-col items-center justify-center gap-4 py-4">
+            <Image
+              src="/content.webp"
+              alt="contented-face"
+              width={50}
+              height={50}
+              className="rounded-full"
+            />
+            <p>No unread notifications</p>
+          </div>
+        ) : (
+          notif.map((n) => (
+            <DropdownMenuItem key={n.id}>{n.message}</DropdownMenuItem>
+          ))
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
 export default function Navbar({ user }: { user: User }) {
   return (
-    <header className="w-full bg-red-300">
-      <nav className="flex items-center justify-between gap-2 px-4 py-2">
+    <header className="w-full">
+      <nav className="flex items-center justify-between gap-2 px-4 py-2 border-b">
         <div className="flex items-center justify-center">
           <Logo /> gawain
         </div>
-        <NavbarDropdown
-          image={user.image}
-          email={user.email}
-          name={user.name}
-        />
+        <div className="flex items-center gap-2">
+          <NotificationDropdown />
+          <NavbarDropdown
+            image={user.image}
+            email={user.email}
+            name={user.name}
+          />
+        </div>
       </nav>
     </header>
   );
