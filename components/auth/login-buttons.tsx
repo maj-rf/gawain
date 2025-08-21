@@ -1,17 +1,17 @@
 'use client';
 import { authClient } from '@/lib/auth-client';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 
 export default function LoginButtons() {
   const signInWithGithub = async () =>
     await authClient.signIn.social({
-      callbackURL: '/home',
+      callbackURL: '/',
       provider: 'github',
     });
 
   const signInWithGoogle = async () =>
     await authClient.signIn.social({
-      callbackURL: '/home',
+      callbackURL: '/',
       provider: 'google',
     });
 

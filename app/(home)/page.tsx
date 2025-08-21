@@ -1,4 +1,3 @@
-import Navbar from '@/components/navbar';
 import { getSession } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
@@ -24,7 +23,7 @@ function HomePageWorkspaces() {
       <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] auto-rows-fr gap-2">
         <ResponsiveModal />
         {boards.map((b) => (
-          <Link href={`/boards/${b.id}`} key={b.id}>
+          <Link href={`/board/${b.id}`} key={b.id}>
             <Card className="p-0 gap-0 overflow-hidden">
               <div className="h-15 bg-radial-[at_25%_25%] from-indigo-400 to-purple-500 to-95%"></div>
               <CardHeader className="py-3">
@@ -44,11 +43,8 @@ export default async function HomePage() {
   const session = await getSession();
   if (!session) redirect('/login');
   return (
-    <div>
-      <Navbar user={session.user} />
-      <main className="px-4 py-2">
-        <HomePageWorkspaces />
-      </main>
+    <div className="px-4 py-2">
+      <HomePageWorkspaces />
     </div>
   );
 }
