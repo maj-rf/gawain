@@ -3,6 +3,7 @@ import { getSession } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import { ResponsiveModal } from '@/components/responsive-modal';
 
 const boards: Array<{ id: string; title: string }> = [
   {
@@ -20,10 +21,8 @@ function HomePageWorkspaces() {
   return (
     <section className="grid gap-2">
       <h1 className="uppercase font-bold">Your Workspaces</h1>
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-4">
-        <div className="bg-accent border rounded-xl shadow-sm flex items-center justify-center">
-          Create new board
-        </div>
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] auto-rows-fr gap-2">
+        <ResponsiveModal />
         {boards.map((b) => (
           <Link href={`/boards/${b.id}`} key={b.id}>
             <Card className="p-0 gap-0 overflow-hidden">
