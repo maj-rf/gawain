@@ -3,11 +3,93 @@ import { getSession } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 
 const boards = [
-  { id: 1, title: 'Todo' },
-  { id: 2, title: 'Ongoing' },
-  { id: 3, title: 'Testing' },
-  { id: 4, title: 'Done' },
+  {
+    id: 1,
+    title: 'Todo',
+    cards: [
+      {
+        id: 1,
+        text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed,quis.',
+      },
+      {
+        id: 2,
+        text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed,quis.',
+      },
+      {
+        id: 3,
+        text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed,quis.',
+      },
+      {
+        id: 4,
+        text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed,quis.',
+      },
+      {
+        id: 5,
+        text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed,quis.',
+      },
+      {
+        id: 6,
+        text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed,quis.',
+      },
+      {
+        id: 7,
+        text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed,quis.',
+      },
+    ],
+  },
+  {
+    id: 2,
+    title: 'Ongoing',
+    cards: [
+      {
+        id: 1,
+        text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed,quis.',
+      },
+      {
+        id: 2,
+        text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed,quis.',
+      },
+      {
+        id: 3,
+        text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed,quis.',
+      },
+    ],
+  },
+  {
+    id: 3,
+    title: 'Testing',
+    cards: [
+      {
+        id: 1,
+        text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed,quis.',
+      },
+      {
+        id: 2,
+        text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed,quis.',
+      },
+      ,
+    ],
+  },
+  {
+    id: 4,
+    title: 'Done',
+    cards: [
+      {
+        id: 1,
+        text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed,quis.',
+      },
+      {
+        id: 2,
+        text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed,quis.',
+      },
+      {
+        id: 3,
+        text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed,quis.',
+      },
+    ],
+  },
 ];
+
 export default async function BoardPage({
   params,
 }: {
@@ -17,33 +99,31 @@ export default async function BoardPage({
 
   const session = await getSession();
   if (!session) redirect('/login');
+
   return (
-    <div className="px-4 py-2">
-      <h1>BoardPage {id}</h1>
-      <section className="grid grid-flow-col-dense overflow-x-scroll gap-4">
-        {boards.map((b) => (
-          <div key={b.id} className="border w-[300px] px-2 py-1 min-h-[300px]">
-            <h2>{b.title}</h2>
-            <hr></hr>
-            <ul className="grid grid-cols-1 gap-2">
-              <li>
+    <div className="grid grid-flow-col-dense h-full gap-4 p-4 items-start overflow-y-hidden">
+      {boards.map((b) => (
+        <div
+          key={b.id}
+          className="border rounded-md w-[300px] overflow-hidden flex flex-col max-h-full"
+        >
+          <h2 className="px-2 py-1">{b.title}</h2>
+          <hr></hr>
+          <ul className="flex-1 space-y-2 overflow-y-auto px-4 py-2">
+            {b.cards.map((c) => (
+              <li key={c?.id}>
                 <input type="checkbox" />
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed,
-                quis.
+                {c?.text}
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Inventore neque quaerat illum quisquam ad voluptates culpa odit,
+                veniam ea sed.
               </li>
-              <li>
-                <input type="checkbox" />
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Omnis
-                odio corporis nobis consequuntur dolor vero at laborum
-                laudantium? Aliquam, tenetur!
-              </li>
-            </ul>
-          </div>
-        ))}
-        <Button variant="outline" className="w-[300px]">
-          Add a column
-        </Button>
-      </section>
+            ))}
+          </ul>
+          <Button variant="ghost">Add a Card</Button>
+        </div>
+      ))}
+      <Button variant="outline">Add a column</Button>
     </div>
   );
 }

@@ -7,9 +7,9 @@ export default function HomeLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div>
+    <div className="h-screen flex flex-col">
       <Navbar />
-      <main>{children}</main>
+      <main className="flex-1 overflow-hidden">{children}</main>
     </div>
   );
 }
