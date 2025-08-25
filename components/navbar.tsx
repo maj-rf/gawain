@@ -65,11 +65,7 @@ const Logo = (props: React.SVGAttributes<SVGElement>) => {
   );
 };
 
-function NavbarDropdown({
-  image,
-  name,
-  email,
-}: Pick<User, 'image' | 'name' | 'email'>) {
+function NavbarDropdown({ image, name, email }: Pick<User, 'image' | 'name' | 'email'>) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -94,9 +90,7 @@ function NavbarDropdown({
 }
 
 function NotificationDropdown() {
-  const notif: Array<{ id: string; message: string }> = [
-    { id: '1', message: 'hello' },
-  ];
+  const notif: Array<{ id: string; message: string }> = [{ id: '1', message: 'hello' }];
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -114,19 +108,11 @@ function NotificationDropdown() {
         <DropdownMenuSeparator />
         {notif.length === 0 ? (
           <div className="w-full flex flex-col items-center justify-center gap-4 py-4">
-            <Image
-              src="/content.webp"
-              alt="contented-face"
-              width={50}
-              height={50}
-              className="rounded-full"
-            />
+            <Image src="/content.webp" alt="contented-face" width={50} height={50} className="rounded-full" />
             <p>No unread notifications</p>
           </div>
         ) : (
-          notif.map((n) => (
-            <DropdownMenuItem key={n.id}>{n.message}</DropdownMenuItem>
-          ))
+          notif.map((n) => <DropdownMenuItem key={n.id}>{n.message}</DropdownMenuItem>)
         )}
       </DropdownMenuContent>
     </DropdownMenu>
@@ -144,11 +130,7 @@ export default async function Navbar() {
         </div>
         <div className="flex items-center gap-2">
           <NotificationDropdown />
-          <NavbarDropdown
-            image={session.user.image}
-            email={session.user.email}
-            name={session.user.name}
-          />
+          <NavbarDropdown image={session.user.image} email={session.user.email} name={session.user.name} />
         </div>
       </nav>
     </header>
