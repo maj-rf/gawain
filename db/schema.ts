@@ -1,4 +1,5 @@
-import { pgTable, text, timestamp, boolean, integer } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
+import { pgTable, text, timestamp, boolean, integer, uuid, primaryKey, pgEnum } from 'drizzle-orm/pg-core';
 
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
@@ -56,3 +57,90 @@ export const verification = pgTable('verification', {
   createdAt: timestamp('created_at').$defaultFn(() => /* @__PURE__ */ new Date()),
   updatedAt: timestamp('updated_at').$defaultFn(() => /* @__PURE__ */ new Date()),
 });
+
+export const board = pgTable('board', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  title: text('title').notNull(),
+  ownerId: text('owner_id')
+    .notNull()
+    .references(() => user.id),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at')
+    .notNull()
+    .$onUpdate(() => new Date()),
+});
+
+export const roleEnum = pgEnum('role', ['owner', 'member']);
+
+export const boardMember = pgTable(
+  'board_member',
+  {
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    boardId: uuid('board_id')
+      .notNull()
+      .references(() => board.id, { onDelete: 'cascade' }),
+    role: roleEnum('role').notNull().default('member'),
+  },
+  (table) => [primaryKey({ columns: [table.userId, table.boardId] })]
+);
+
+export const column = pgTable('column', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  title: text('title').notNull(),
+  boardId: uuid('board_id')
+    .notNull()
+    .references(() => board.id, { onDelete: 'cascade' }),
+  order: integer('order').notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at')
+    .notNull()
+    .$onUpdate(() => new Date()),
+});
+
+export const card = pgTable('card', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  title: text('title').notNull(),
+  description: text('description'),
+  columnId: uuid('column_id')
+    .notNull()
+    .references(() => column.id, { onDelete: 'cascade' }),
+  order: integer('order').notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at')
+    .notNull()
+    .$onUpdate(() => new Date()),
+});
+
+// Relations
+export const boardRelations = relations(board, ({ many }) => ({
+  member: many(boardMember),
+  column: many(column),
+}));
+
+export const boardMemberRelations = relations(boardMember, ({ one }) => ({
+  user: one(user, {
+    fields: [boardMember.userId],
+    references: [user.id],
+  }),
+  board: one(board, {
+    fields: [boardMember.boardId],
+    references: [board.id],
+  }),
+}));
+
+export const columnRelations = relations(column, ({ one, many }) => ({
+  board: one(board, {
+    fields: [column.boardId],
+    references: [board.id],
+  }),
+  card: many(card),
+}));
+
+export const cardRelation = relations(card, ({ one }) => ({
+  column: one(column, {
+    fields: [card.columnId],
+    references: [column.id],
+  }),
+}));

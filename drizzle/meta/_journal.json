@@ -8,6 +8,13 @@
       "when": 1755248032073,
       "tag": "0000_auth-schema",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1756263797901,
+      "tag": "0001_board-columns-cards",
+      "breakpoints": true
     }
   ]
 }
