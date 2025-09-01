@@ -118,3 +118,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+.green-gradient {
+  background:
+    radial-gradient(at 86% 41%, #90e0ab 0px, transparent 50%),
+    radial-gradient(at 24% 72%, #ff6347 0px, transparent 50%),
+    radial-gradient(at 93% 77%, #cbffce 0px, transparent 50%),
+    radial-gradient(at 91% 20%, #4682b4 0px, transparent 50%), #90e0ab;
+
+  background-attachment: fixed;
+  background-position: center center;
+  background-repeat: no-repeat;
+}

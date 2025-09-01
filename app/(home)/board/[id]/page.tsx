@@ -99,9 +99,9 @@ export default async function BoardPage({ params }: { params: Promise<{ id: stri
   if (!session) redirect('/login');
 
   return (
-    <div className="grid grid-flow-col-dense h-full gap-4 p-4 items-start overflow-y-hidden">
+    <div className="grid grid-flow-col-dense h-full gap-4 p-4 items-start overflow-y-hidden green-gradient">
       {boards.map((b) => (
-        <div key={b.id} className="border rounded-md w-[300px] overflow-hidden flex flex-col max-h-full">
+        <div key={b.id} className="border rounded-md w-[300px] overflow-hidden flex flex-col max-h-full bg-background">
           <h2 className="px-2 py-1">{b.title}</h2>
           <hr></hr>
           <ul className="flex-1 space-y-2 overflow-y-auto px-4 py-2">
