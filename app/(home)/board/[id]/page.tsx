@@ -1,8 +1,7 @@
 import { ColumnForm } from '@/components/column-form';
 import { ResponsiveModal } from '@/components/responsive-modal';
 import { Button } from '@/components/ui/button';
-import { getSession } from '@/lib/auth';
-import { redirect } from 'next/navigation';
+import { requireAuth } from '@/lib/data';
 
 const boards = [
   {
@@ -95,8 +94,7 @@ const boards = [
 export default async function BoardPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  const session = await getSession();
-  if (!session) redirect('/login');
+  await requireAuth();
 
   return (
     <div className="grid grid-flow-col-dense h-full gap-4 p-4 items-start overflow-y-hidden green-gradient">

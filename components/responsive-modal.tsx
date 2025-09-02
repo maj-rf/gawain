@@ -39,7 +39,10 @@ export function ResponsiveModal(props: ResponsiveModalProps) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger
-          className={cn('bg-accent border rounded-xl shadow-sm flex items-center justify-center ', props.triggerClass)}
+          className={cn(
+            'bg-accent border rounded-xl shadow-sm flex items-center justify-center active:scale-[0.98] active:shadow-inner duration-150 ease-in-out ',
+            props.triggerClass
+          )}
         >
           {props.triggerTitle}
         </DialogTrigger>

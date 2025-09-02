@@ -11,8 +11,7 @@ import {
 import { Bell } from 'lucide-react';
 import { Button } from './ui/button';
 import Image from 'next/image';
-import { getSession } from '@/lib/auth';
-import { redirect } from 'next/navigation';
+import { requireAuth } from '@/lib/data';
 
 type User = {
   id: string;
@@ -120,8 +119,7 @@ function NotificationDropdown() {
 }
 
 export default async function Navbar() {
-  const session = await getSession();
-  if (!session) redirect('/login');
+  const user = await requireAuth();
   return (
     <header className="w-full">
       <nav className="flex items-center justify-between gap-2 px-4 py-2 border-b">
@@ -130,7 +128,7 @@ export default async function Navbar() {
         </div>
         <div className="flex items-center gap-2">
           <NotificationDropdown />
-          <NavbarDropdown image={session.user.image} email={session.user.email} name={session.user.name} />
+          <NavbarDropdown image={user.image} email={user.email} name={user.name} />
         </div>
       </nav>
     </header>
