@@ -7,6 +7,7 @@ export const notifs = {
   BOARD: {
     CREATE_SUCCESS: 'Board created',
     CREATE_FAIL: 'Failed to create board',
+    MIN_TITLE_LENGTH: 'Title must be at least 3 characters long',
   },
   COLUMN: {
     CREATE_SUCCESS: 'Column created',
