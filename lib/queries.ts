@@ -1,6 +1,6 @@
 import { db } from '@/db';
-import { desc, eq } from 'drizzle-orm';
-import { board, boardMember, user } from '@/db/schema';
+import { and, asc, desc, eq } from 'drizzle-orm';
+import { board, boardMember, card, column, user } from '@/db/schema';
 
 export async function createBoard(data: { ownerId: string; title: string }) {
   return await db.transaction(async (tx) => {
@@ -41,4 +41,44 @@ export async function getUserBoards(userId: string) {
     .leftJoin(user, eq(board.ownerId, user.id))
     .where(eq(boardMember.userId, userId))
     .orderBy(desc(board.createdAt));
+}
+
+export async function getMembership(id: string, userId: string) {
+  const arr = await db
+    .select({ role: boardMember.role, userId: boardMember.userId })
+    .from(boardMember)
+    .where(and(eq(boardMember.userId, userId), eq(boardMember.boardId, id)));
+  return arr[0];
+}
+
+export async function getBoardWithColumns(id: string) {
+  const arr = await db.query.board.findFirst({
+    where: eq(board.id, id),
+    with: {
+      column: {
+        orderBy: asc(column.order),
+        with: {
+          card: {
+            orderBy: asc(card.order),
+          },
+        },
+      },
+    },
+  });
+  // const arr = await db
+  // .select({
+  //   boardId: boards.id,
+  //   boardTitle: boards.title,
+  //   columnId: columns.id,
+  //   columnTitle: columns.title,
+  //   columnCreatedAt: columns.createdAt,
+  //   cardId: cards.id,
+  //   cardTitle: cards.title,
+  //   cardCreatedAt: cards.createdAt,
+  // })
+  // .from(boards)
+  // .leftJoin(columns, eq(columns.boardId, boards.id))
+  // .leftJoin(cards, eq(cards.columnId, columns.id))
+  // .orderBy(asc(columns.order), asc(cards.order));
+  return arr;
 }
