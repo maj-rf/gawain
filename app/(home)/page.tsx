@@ -1,19 +1,8 @@
 import Link from 'next/link';
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ResponsiveModal } from '@/components/responsive-modal';
 import { CreateBoardForm } from '@/components/create-board-form';
 import { fetchUserBoards } from '@/lib/data';
-
-// const boards: Array<{ id: string; title: string }> = [
-//   {
-//     id: '1',
-//     title: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolores, odio.',
-//   },
-//   { id: '2', title: 'hello' },
-//   { id: '3', title: 'whatever' },
-//   { id: '4', title: 'i misss your tan skin' },
-//   { id: '5', title: 'your sweet smile' },
-// ];
 
 function HomePageWorkspaces({
   boards,
@@ -48,6 +37,7 @@ function HomePageWorkspaces({
               <div className="flex-1 bg-radial-[at_25%_25%] from-indigo-400 to-purple-500 to-95%"></div>
               <CardHeader className="py-3">
                 <CardTitle className="font-normal truncate">{b.title}</CardTitle>
+                <CardDescription>by{b.ownerName}</CardDescription>
               </CardHeader>
             </Card>
           </Link>
