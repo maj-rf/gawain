@@ -1,5 +1,5 @@
 import { db } from '@/db';
-import { and, asc, desc, eq } from 'drizzle-orm';
+import { and, asc, desc, eq, max } from 'drizzle-orm';
 import { board, boardMember, card, column, user } from '@/db/schema';
 
 export async function createBoard(data: { ownerId: string; title: string }) {
@@ -81,4 +81,15 @@ export async function getBoardWithColumns(id: string) {
   // .leftJoin(cards, eq(cards.columnId, columns.id))
   // .orderBy(asc(columns.order), asc(cards.order));
   return arr;
+}
+
+// Column Queries
+export async function createColumn({ boardId, title }: { boardId: string; title: string }) {
+  const [result] = await db
+    .select({ value: max(column.order) })
+    .from(column)
+    .where(eq(column.boardId, boardId));
+  const newOrder = (result?.value ?? -1) + 1;
+  const [newCol] = await db.insert(column).values({ boardId, title, order: newOrder }).returning();
+  return newCol;
 }

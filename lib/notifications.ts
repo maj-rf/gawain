@@ -12,6 +12,7 @@ export const notifs = {
   COLUMN: {
     CREATE_SUCCESS: 'Column created',
     CREATE_FAIL: 'Failed to create column',
+    MIN_TITLE_LENGTH: 'Title must be at least 3 characters long',
   },
   TASK: {},
   INVITE: {},
