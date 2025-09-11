@@ -144,3 +144,7 @@ export const cardRelation = relations(card, ({ one }) => ({
     references: [column.id],
   }),
 }));
+
+export type TBoard = typeof board.$inferSelect;
+export type TColumn = typeof column.$inferSelect;
+export type TCard = typeof card.$inferSelect;
