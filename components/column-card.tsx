@@ -5,8 +5,7 @@ export default function ColumnCard(props: TCard) {
     <li>
       <input type="checkbox" />
       {props.title}
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore neque quaerat illum quisquam ad voluptates
-      culpa odit, veniam ea sed.
+      <span className="text-foreground/60">{props.createdAt.toLocaleDateString()}</span>
     </li>
   );
 }

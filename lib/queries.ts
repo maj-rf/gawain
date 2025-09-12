@@ -93,3 +93,17 @@ export async function createColumn({ boardId, title }: { boardId: string; title:
   const [newCol] = await db.insert(column).values({ boardId, title, order: newOrder }).returning();
   return newCol;
 }
+
+// Card Queries
+export async function createCard({ columnId, title }: { columnId: string; title: string }) {
+  // 1. get the maximum order value from card in a specific column (columnId)
+  // 2. if no result, no existing card so start from zero
+  // 3. else, increase order by 1.
+  const [result] = await db
+    .select({ value: max(card.order) })
+    .from(card)
+    .where(eq(card.columnId, columnId));
+  const newOrder = (result?.value ?? -1) + 1;
+  const [newCard] = await db.insert(card).values({ columnId, title, order: newOrder }).returning();
+  return newCard;
+}
