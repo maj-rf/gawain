@@ -6,6 +6,11 @@ export type State = {
   message: string;
 };
 
+export type CreateActionResponse = {
+  success: boolean;
+  message: string;
+};
+
 type ColumnWithCards = Array<TColumn & { card: TCard[] }>;
 export type BoardWithColumns = TBoard & { column: ColumnWithCards };
 export type TColumnWithChildren = PropsWithChildren<TColumn>;

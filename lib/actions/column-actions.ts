@@ -2,22 +2,17 @@
 import { z } from 'zod';
 import { notifs } from '@/lib/notifications';
 import { createColumn } from '../queries';
-import { CreateColumnSchema } from '../schemas';
-import { State } from '@/types/types';
+import { CreateFormSchema } from '../schemas';
+import { CreateActionResponse, State } from '@/types/types';
 import { revalidatePath } from 'next/cache';
-
-type CreateColumnResponse = {
-  success: boolean;
-  message: string;
-};
 
 export async function handleCreateColumn(
   boardId: string,
   _prevState: State,
   formData: FormData
-): Promise<CreateColumnResponse> {
+): Promise<CreateActionResponse> {
   const form = Object.fromEntries(formData);
-  const parsedForm = CreateColumnSchema.safeParse(form);
+  const parsedForm = CreateFormSchema.safeParse(form);
   // server-side validation
   if (!parsedForm.success) return { success: false, message: z.prettifyError(parsedForm.error) };
   try {

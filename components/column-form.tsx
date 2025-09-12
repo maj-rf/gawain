@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Button } from './ui/button';
 import { handleCreateColumn } from '@/lib/actions/column-actions';
-import { CreateColumnSchema } from '@/lib/schemas';
+import { CreateFormSchema } from '@/lib/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { State } from '@/types/types';
 import { useActionState, useTransition } from 'react';
@@ -16,8 +16,8 @@ export function ColumnForm({ boardId, className }: React.ComponentProps<'form'> 
   const handleCreateColumnWithId = handleCreateColumn.bind(null, boardId);
   const [, formAction, isPending] = useActionState(handleCreateColumnWithId, initialState);
   const [, startTransition] = useTransition();
-  const form = useForm<z.infer<typeof CreateColumnSchema>>({
-    resolver: zodResolver(CreateColumnSchema),
+  const form = useForm<z.infer<typeof CreateFormSchema>>({
+    resolver: zodResolver(CreateFormSchema),
     defaultValues: {
       title: '',
     },

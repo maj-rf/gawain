@@ -11,9 +11,11 @@ export default function Board(props: BoardWithColumns) {
       <div className="flex flex-nowrap h-[calc(100%-1.5rem)] gap-4 p-4 items-start overflow-y-hidden green-gradient">
         {props.column.map((c) => (
           <Column key={c.id} {...c}>
-            {c.card.map((ca) => (
-              <ColumnCard key={ca.id} {...ca} />
-            ))}
+            {c.card.length === 0 ? (
+              <div className="text-center">All tasks completed</div>
+            ) : (
+              c.card.map((ca) => <ColumnCard key={ca.id} {...ca} />)
+            )}
           </Column>
         ))}
 
