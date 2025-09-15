@@ -69,7 +69,7 @@ function NavbarDropdown({ image, name, email }: Pick<User, 'image' | 'name' | 'e
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar>
-          <AvatarImage src={image ?? 'https://github.com/shadcn.png'} />
+          <AvatarImage referrerPolicy="no-referrer" src={image ?? 'https://github.com/shadcn.png'} />
           <AvatarFallback>PC</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

@@ -2,7 +2,7 @@
 import { CreateActionResponse, State } from '@/types/types';
 import { CreateFormSchema } from '../schemas';
 import { z } from 'zod';
-import { createCard } from '../queries';
+import { createCard, deleteCard } from '../queries';
 import { revalidatePath } from 'next/cache';
 import { notifs } from '../notifications';
 export async function handleCreateCard(
@@ -20,5 +20,26 @@ export async function handleCreateCard(
   } catch (error) {
     console.log(error);
     return { success: false, message: 'Something went wrong' };
+  }
+}
+
+export async function handleDeleteCard({
+  columnId,
+  cardId,
+  order,
+  boardId,
+}: {
+  columnId: string;
+  cardId: string;
+  order: number;
+  boardId: string;
+}): Promise<CreateActionResponse> {
+  try {
+    await deleteCard({ columnId, cardId, order });
+    revalidatePath(`/${boardId}`);
+    return { success: true, message: notifs.CARD.DELETE_SUCCESS };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: (error as Error).message };
   }
 }

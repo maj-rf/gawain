@@ -12,9 +12,11 @@ export default function Board(props: BoardWithColumns) {
         {props.column.map((c) => (
           <Column key={c.id} {...c}>
             {c.card.length === 0 ? (
-              <div className="text-center">All tasks completed</div>
+              <div className="text-center border-foreground/40 border border-dashed rounded-md py-2">
+                Drop cards here
+              </div>
             ) : (
-              c.card.map((ca) => <ColumnCard key={ca.id} {...ca} />)
+              c.card.map((ca) => <ColumnCard key={ca.id} {...ca} boardId={props.id} />)
             )}
           </Column>
         ))}

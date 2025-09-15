@@ -1,5 +1,5 @@
 import { db } from '@/db';
-import { and, asc, desc, eq, max } from 'drizzle-orm';
+import { and, asc, desc, eq, gt, max, sql } from 'drizzle-orm';
 import { board, boardMember, card, column, user } from '@/db/schema';
 
 export async function createBoard(data: { ownerId: string; title: string }) {
@@ -106,4 +106,16 @@ export async function createCard({ columnId, title }: { columnId: string; title:
   const newOrder = (result?.value ?? -1) + 1;
   const [newCard] = await db.insert(card).values({ columnId, title, order: newOrder }).returning();
   return newCard;
+}
+
+export async function deleteCard({ columnId, cardId, order }: { columnId: string; cardId: string; order: number }) {
+  return await db.transaction(async (tx) => {
+    const deleted = await tx.delete(card).where(eq(card.id, cardId)).returning();
+    if (deleted.length === 0) throw new Error('Card not found');
+    await tx
+      .update(card)
+      .set({ order: sql`${card.order} - 1` })
+      .where(and(eq(card.columnId, columnId), gt(card.order, order)));
+    return deleted[0];
+  });
 }
