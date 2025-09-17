@@ -11,6 +11,7 @@ export const notifs = {
   COLUMN: {
     CREATE_SUCCESS: 'Column created',
     CREATE_FAIL: 'Failed to create column',
+    REORDER_SUCCESS: 'Changed Column order',
   },
   CARD: {
     CREATE_SUCCESS: 'Card created',

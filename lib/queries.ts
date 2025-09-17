@@ -94,6 +94,23 @@ export async function createColumn({ boardId, title }: { boardId: string; title:
   return newCol;
 }
 
+export async function reorderColumn({
+  boardId,
+  updates,
+}: {
+  boardId: string;
+  updates: { id: string; order: number }[];
+}) {
+  return await db.transaction(async (tx) => {
+    for (const { id, order } of updates) {
+      await tx
+        .update(column)
+        .set({ order })
+        .where(and(eq(column.id, id), eq(column.boardId, boardId)));
+    }
+  });
+}
+
 // Card Queries
 export async function createCard({ columnId, title }: { columnId: string; title: string }) {
   // 1. get the maximum order value from card in a specific column (columnId)

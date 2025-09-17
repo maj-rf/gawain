@@ -7,7 +7,12 @@ import { handleDeleteCard } from '@/lib/actions/card-actions';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
-export default function ColumnCard(props: TCard & { boardId: string }) {
+type ColumnCardProps = TCard & {
+  boardId: string;
+  handleClientDeleteCard: (columnId: string, cardId: string) => void;
+};
+
+export default function ColumnCard(props: ColumnCardProps) {
   const [isPending, startTransition] = useTransition();
   return (
     <li className={cn('relative px-2 py-1 bg-accent rounded-sm', { 'opacity-60': isPending })}>
@@ -32,7 +37,9 @@ export default function ColumnCard(props: TCard & { boardId: string }) {
             });
             if (!result.success) {
               toast.error(result.message);
+              return;
             }
+            props.handleClientDeleteCard(props.columnId, props.id);
           });
         }}
       >
