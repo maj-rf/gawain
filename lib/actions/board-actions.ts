@@ -7,7 +7,7 @@ import { CreateFormSchema } from '../schemas';
 import { CreateActionResponse, State } from '@/types/types';
 import { revalidatePath } from 'next/cache';
 
-export async function handleCreateBoard(prevState: State, formData: FormData): Promise<CreateActionResponse> {
+export async function createBoardAction(_prevState: State, formData: FormData): Promise<CreateActionResponse> {
   try {
     const user = await requireAuth();
     const form = Object.fromEntries(formData);

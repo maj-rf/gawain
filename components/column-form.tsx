@@ -1,8 +1,7 @@
 'use client';
-import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Button } from './ui/button';
-import { handleCreateColumn } from '@/lib/actions/column-actions';
+import { createColumnAction } from '@/lib/actions/column-actions';
 import { CreateFormSchema } from '@/lib/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { State } from '@/types/types';
@@ -11,10 +10,10 @@ import { useForm } from 'react-hook-form';
 import z from 'zod';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from './ui/form';
 
-export function ColumnForm({ boardId, className }: React.ComponentProps<'form'> & { boardId: string }) {
+export function ColumnForm({ boardId }: { boardId: string }) {
   const initialState: State = { message: '', success: false };
-  const handleCreateColumnWithId = handleCreateColumn.bind(null, boardId);
-  const [, formAction, isPending] = useActionState(handleCreateColumnWithId, initialState);
+  const createColumnActionWithId = createColumnAction.bind(null, boardId);
+  const [, formAction, isPending] = useActionState(createColumnActionWithId, initialState);
   const [, startTransition] = useTransition();
   const form = useForm<z.infer<typeof CreateFormSchema>>({
     resolver: zodResolver(CreateFormSchema),
@@ -33,7 +32,7 @@ export function ColumnForm({ boardId, className }: React.ComponentProps<'form'> 
             formAction(formData);
           });
         })}
-        className={cn('grid items-start gap-6', className)}
+        className="grid items-start gap-6"
       >
         <FormField
           control={form.control}
@@ -55,13 +54,4 @@ export function ColumnForm({ boardId, className }: React.ComponentProps<'form'> 
       </form>
     </Form>
   );
-  // return (
-  //   <form className={cn('grid items-start gap-6', className)}>
-  //     <div className="grid gap-3">
-  //       <Label htmlFor="column-title">Column Title</Label>
-  //       <Input id="column-title" placeholder="Your Column Title" />
-  //     </div>
-  //     <Button type="submit">Submit</Button>
-  //   </form>
-  // );
 }

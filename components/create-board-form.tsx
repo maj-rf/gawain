@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Button } from './ui/button';
 import { useActionState, useTransition } from 'react';
-import { handleCreateBoard } from '@/lib/actions/board-actions';
+import { createBoardAction } from '@/lib/actions/board-actions';
 import { CreateFormSchema } from '@/lib/schemas';
 import { State } from '@/types/types';
 import { useForm } from 'react-hook-form';
@@ -14,7 +14,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 export function CreateBoardForm({ className }: React.ComponentProps<'form'>) {
   const initialState: State = { message: '', success: false };
   // TODO: how to mix RHF & useActionState???
-  const [state, formAction, isPending] = useActionState(handleCreateBoard, initialState);
+  const [, formAction, isPending] = useActionState(createBoardAction, initialState);
   const [, startTransition] = useTransition();
   const form = useForm<z.infer<typeof CreateFormSchema>>({
     resolver: zodResolver(CreateFormSchema),

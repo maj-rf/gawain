@@ -19,8 +19,8 @@ import {
   SortableContext,
   sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable';
-import { useState, useTransition } from 'react';
-import { handleReorderColumn } from '@/lib/actions/column-actions';
+import { useEffect, useState, useTransition } from 'react';
+import { reorderColumnAction } from '@/lib/actions/column-actions';
 
 export default function Board(props: BoardWithColumns) {
   const [cols, setCols] = useState(props.column);
@@ -30,22 +30,15 @@ export default function Board(props: BoardWithColumns) {
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
-  function handleClientDeleteCard(columnId: string, cardId: string) {
-    setCols((prev) => {
-      const newCols = [...prev];
-      const currentCol = newCols.find((col) => col.id === columnId);
-      if (currentCol) {
-        currentCol.card = currentCol.card.filter((c) => c.id !== cardId);
-        currentCol.card = currentCol.card.map((c, i) => ({ ...c, order: i }));
-      }
-      return newCols;
-    });
-  }
+  // sync server state to client state
+  useEffect(() => {
+    setCols(props.column);
+  }, [props.column]);
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
     if (!over) return;
-
+    if (active.id === over.id) return;
     const activeData = active.data.current;
     const overData = over.data.current;
 
@@ -55,7 +48,7 @@ export default function Board(props: BoardWithColumns) {
       const newCols = arrayMove(cols, oldIndex, newIndex);
       const updatedCols = newCols.map((c, i) => ({ ...c, order: i }));
       startTransition(async () => {
-        await handleReorderColumn({ boardId: props.id, updates: updatedCols });
+        await reorderColumnAction({ boardId: props.id, updates: updatedCols });
       });
       setCols(updatedCols);
     }
@@ -83,9 +76,7 @@ export default function Board(props: BoardWithColumns) {
                   Drop cards here
                 </div>
               ) : (
-                c.card.map((ca) => (
-                  <ColumnCard key={ca.id} {...ca} boardId={props.id} handleClientDeleteCard={handleClientDeleteCard} />
-                ))
+                c.card.map((ca) => <ColumnCard key={ca.id} {...ca} boardId={props.id} />)
               )}
             </Column>
           ))}

@@ -6,7 +6,7 @@ import { CreateFormSchema } from '../schemas';
 import { CreateActionResponse, State } from '@/types/types';
 import { revalidatePath } from 'next/cache';
 
-export async function handleCreateColumn(
+export async function createColumnAction(
   boardId: string,
   _prevState: State,
   formData: FormData
@@ -17,7 +17,7 @@ export async function handleCreateColumn(
   if (!parsedForm.success) return { success: false, message: z.prettifyError(parsedForm.error) };
   try {
     await createColumn({ title: parsedForm.data.title, boardId });
-    revalidatePath('/');
+    revalidatePath(`/board/${boardId}`);
     return { success: true, message: notifs.BOARD.CREATE_SUCCESS };
   } catch (error) {
     console.log(error);
@@ -25,7 +25,7 @@ export async function handleCreateColumn(
   }
 }
 
-export async function handleReorderColumn({
+export async function reorderColumnAction({
   boardId,
   updates,
 }: {
@@ -34,7 +34,7 @@ export async function handleReorderColumn({
 }) {
   try {
     await reorderColumn({ boardId, updates });
-    revalidatePath(`/${boardId}`);
+    revalidatePath(`/board/${boardId}`);
     return { success: true, message: notifs.COLUMN.REORDER_SUCCESS };
   } catch (error) {
     console.error(error);

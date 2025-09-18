@@ -1,7 +1,7 @@
 'use client';
 import { Input } from '@/components/ui/input';
 import { Button } from './ui/button';
-import { handleCreateCard } from '@/lib/actions/card-actions';
+import { createCardAction } from '@/lib/actions/card-actions';
 import { CreateFormSchema } from '@/lib/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { State } from '@/types/types';
@@ -12,8 +12,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 
 export default function CreateCardForm(props: PropsWithChildren<{ columnId: string; boardId: string }>) {
   const initialState: State = { message: '', success: false };
-  const handleCreateCardWithIds = handleCreateCard.bind(null, { columnId: props.columnId, boardId: props.boardId });
-  const [, formAction, isPending] = useActionState(handleCreateCardWithIds, initialState);
+  const createCardActionWithIds = createCardAction.bind(null, { columnId: props.columnId, boardId: props.boardId });
+  const [, formAction, isPending] = useActionState(createCardActionWithIds, initialState);
   const [, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof CreateFormSchema>>({

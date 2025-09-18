@@ -3,13 +3,12 @@ import { TCard } from '@/db/schema';
 import { Button } from './ui/button';
 import { CircleX } from 'lucide-react';
 import { useTransition } from 'react';
-import { handleDeleteCard } from '@/lib/actions/card-actions';
+import { deleteCardAction } from '@/lib/actions/card-actions';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
 type ColumnCardProps = TCard & {
   boardId: string;
-  handleClientDeleteCard: (columnId: string, cardId: string) => void;
 };
 
 export default function ColumnCard(props: ColumnCardProps) {
@@ -29,7 +28,7 @@ export default function ColumnCard(props: ColumnCardProps) {
         disabled={isPending}
         onClick={() => {
           startTransition(async () => {
-            const result = await handleDeleteCard({
+            const result = await deleteCardAction({
               columnId: props.columnId,
               cardId: props.id,
               order: props.order,
@@ -39,7 +38,6 @@ export default function ColumnCard(props: ColumnCardProps) {
               toast.error(result.message);
               return;
             }
-            props.handleClientDeleteCard(props.columnId, props.id);
           });
         }}
       >
