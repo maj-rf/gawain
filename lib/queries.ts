@@ -136,3 +136,10 @@ export async function deleteCard({ columnId, cardId, order }: { columnId: string
     return deleted[0];
   });
 }
+
+export async function editCard({ columnId, cardId, title }: { columnId: string; cardId: string; title: string }) {
+  return await db
+    .update(card)
+    .set({ title })
+    .where(and(eq(card.columnId, columnId), eq(card.id, cardId)));
+}

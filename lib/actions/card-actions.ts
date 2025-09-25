@@ -44,3 +44,23 @@ export async function deleteCardAction({
     return { success: false, message: (error as Error).message };
   }
 }
+
+//TODO: unused
+export async function editCardAction({
+  columnId,
+  cardId,
+  order,
+  boardId,
+}: {
+  columnId: string;
+  cardId: string;
+  order: number;
+  boardId: string;
+}): Promise<CreateActionResponse> {
+  try {
+    return { success: true, message: notifs.CARD.EDIT_SUCCESS };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: notifs.CARD.EDIT_FAIL };
+  }
+}

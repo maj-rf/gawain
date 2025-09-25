@@ -38,6 +38,6 @@ export async function reorderColumnAction({
     return { success: true, message: notifs.COLUMN.REORDER_SUCCESS };
   } catch (error) {
     console.error(error);
-    return { success: false, message: 'Something went wrong' };
+    return { success: false, message: notifs.COLUMN.REORDER_FAIL };
   }
 }
