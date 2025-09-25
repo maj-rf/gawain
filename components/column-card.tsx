@@ -1,11 +1,11 @@
 'use client';
 import { TCard } from '@/db/schema';
 import { Button } from './ui/button';
-import { CircleX } from 'lucide-react';
 import { useTransition } from 'react';
 import { deleteCardAction } from '@/lib/actions/card-actions';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { CircleX } from 'lucide-react';
 
 type ColumnCardProps = TCard & {
   boardId: string;
@@ -14,17 +14,25 @@ type ColumnCardProps = TCard & {
 export default function ColumnCard(props: ColumnCardProps) {
   const [isPending, startTransition] = useTransition();
   return (
-    <li className={cn('relative px-2 py-1 bg-accent rounded-sm', { 'opacity-60': isPending })}>
-      <div className="flex items-center gap-2">
-        <div>
-          <p>{props.title}</p>
+    <li
+      className={cn(
+        'flex relative px-2 py-1 overflow-hidden bg-accent rounded-sm hover:outline-2 hover:outline-yellow-200 group',
+        {
+          'opacity-60': isPending,
+        }
+      )}
+    >
+      <div className="flex w-full items-center gap-2">
+        <div className="w-full">
+          <p className="wrap-break-word w-full">{props.title}</p>
           <span className="text-foreground/60">{props.createdAt.toLocaleDateString()}</span>
         </div>
       </div>
       <Button
-        className="absolute top-0 right-0 ml-auto"
-        variant="ghost"
+        className="w-fit px-2 py-1 absolute top-1 right-[-100px] group-hover:right-1"
+        variant="destructive"
         size="icon"
+        name="delete-card-btn"
         disabled={isPending}
         onClick={() => {
           startTransition(async () => {
@@ -41,7 +49,7 @@ export default function ColumnCard(props: ColumnCardProps) {
           });
         }}
       >
-        <CircleX className="stroke-red-500" />
+        <CircleX className="stroke-background" />
       </Button>
     </li>
   );

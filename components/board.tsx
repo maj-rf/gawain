@@ -21,6 +21,7 @@ import {
 } from '@dnd-kit/sortable';
 import { useEffect, useState, useTransition } from 'react';
 import { reorderColumnAction } from '@/lib/actions/column-actions';
+import { toast } from 'sonner';
 
 export default function Board(props: BoardWithColumns) {
   const [cols, setCols] = useState(props.column);
@@ -41,16 +42,21 @@ export default function Board(props: BoardWithColumns) {
     if (active.id === over.id) return;
     const activeData = active.data.current;
     const overData = over.data.current;
-
     if (activeData?.type === 'column' && overData?.type === 'column') {
+      const oldCols = [...cols];
       const oldIndex = cols.findIndex((c) => c.id === active.id);
       const newIndex = cols.findIndex((c) => c.id === over.id);
       const newCols = arrayMove(cols, oldIndex, newIndex);
       const updatedCols = newCols.map((c, i) => ({ ...c, order: i }));
-      startTransition(async () => {
-        await reorderColumnAction({ boardId: props.id, updates: updatedCols });
-      });
       setCols(updatedCols);
+      startTransition(async () => {
+        const res = await reorderColumnAction({ boardId: props.id, updates: updatedCols });
+        // revert to old columns if reorder errors.
+        if (!res.success) {
+          setCols(oldCols);
+          toast.error(res.message);
+        }
+      });
     }
 
     // TODO: Add card reorder & sorting
