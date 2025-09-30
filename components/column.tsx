@@ -3,28 +3,28 @@ import { useState } from 'react';
 import { Button } from './ui/button';
 import { TColumnWithChildren } from '@/types/types';
 import CreateCardForm from './create-card-form';
-import { CSS } from '@dnd-kit/utilities';
-import { useSortable } from '@dnd-kit/sortable';
+import { CollisionPriority } from '@dnd-kit/abstract';
+import { cn } from '@/lib/utils';
+import { useSortable } from '@dnd-kit/react/sortable';
 
 export default function Column(props: TColumnWithChildren) {
   const [active, setActive] = useState(false);
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+  const { ref, isDropTarget, handleRef } = useSortable({
     id: props.id,
-    data: { type: 'column' },
+    index: props.order,
+    type: 'column',
+    accept: ['item', 'column'],
+    collisionPriority: CollisionPriority.Low,
   });
-
-  const style = {
-    transform: CSS.Translate.toString(transform),
-    transition,
-  };
 
   return (
     <div
-      className="border rounded-md w-[300px] shrink-0 overflow-hidden flex flex-col max-h-full bg-background"
-      ref={setNodeRef}
-      style={style}
+      ref={ref}
+      className={cn(`border rounded-md w-[300px] shrink-0 overflow-hidden flex flex-col max-h-full bg-background`, {
+        'bg-red-200': isDropTarget,
+      })}
     >
-      <div {...attributes} {...listeners} className="hover:cursor-grab">
+      <div className="hover:cursor-grab" ref={handleRef}>
         <div className="h-2 w-[60%] shrink-0 rounded-4xl mx-auto my-2 bg-black/40"></div>
       </div>
       <h2 className="px-2 py-1">{props.title}</h2>

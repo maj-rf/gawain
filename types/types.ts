@@ -11,6 +11,6 @@ export type CreateActionResponse = {
   message: string;
 };
 
-type ColumnWithCards = Array<TColumn & { card: TCard[] }>;
-export type BoardWithColumns = TBoard & { column: ColumnWithCards };
+type ColumnWithCards = TColumn & { card: TCard[] };
+export type BoardWithColumns = TBoard & { column: ColumnWithCards[] };
 export type TColumnWithChildren = PropsWithChildren<TColumn>;

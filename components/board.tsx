@@ -4,89 +4,79 @@ import Column from './column';
 import ColumnCard from './column-card';
 import { ColumnForm } from './column-form';
 import { ResponsiveModal } from './responsive-modal';
-import {
-  closestCenter,
-  DndContext,
-  DragEndEvent,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
-import {
-  arrayMove,
-  horizontalListSortingStrategy,
-  SortableContext,
-  sortableKeyboardCoordinates,
-} from '@dnd-kit/sortable';
-import { useEffect, useState, useTransition } from 'react';
+import { DragDropProvider } from '@dnd-kit/react';
+import { move } from '@dnd-kit/helpers';
+import { useEffect, useRef, useState, useTransition } from 'react';
 import { reorderColumnAction } from '@/lib/actions/column-actions';
 import { toast } from 'sonner';
 
 export default function Board(props: BoardWithColumns) {
   const [cols, setCols] = useState(props.column);
   const [isPending, startTransition] = useTransition();
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
-  );
-
+  const prevCols = useRef(cols);
   // sync server state to client state
   useEffect(() => {
     setCols(props.column);
   }, [props.column]);
 
-  function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event;
-    if (!over) return;
-    if (active.id === over.id) return;
-    const activeData = active.data.current;
-    const overData = over.data.current;
-    if (activeData?.type === 'column' && overData?.type === 'column') {
-      const oldCols = [...cols];
-      const oldIndex = cols.findIndex((c) => c.id === active.id);
-      const newIndex = cols.findIndex((c) => c.id === over.id);
-      const newCols = arrayMove(cols, oldIndex, newIndex);
-      const updatedCols = newCols.map((c, i) => ({ ...c, order: i }));
-      setCols(updatedCols);
-      startTransition(async () => {
-        const res = await reorderColumnAction({ boardId: props.id, updates: updatedCols });
-        // revert to old columns if reorder errors.
-        if (!res.success) {
-          setCols(oldCols);
-          toast.error(res.message);
-        }
-      });
-    }
+  // function handleDragEnd(event: DragEndEvent) {
+  //   const { active, over } = event;
+  //   if (!over) return;
+  //   if (active.id === over.id) return;
+  //   const activeData = active.data.current;
+  //   const overData = over.data.current;
+  //   if (activeData?.type === 'column' && overData?.type === 'column') {
+  //     const oldCols = [...cols];
+  //     const oldIndex = cols.findIndex((c) => c.id === active.id);
+  //     const newIndex = cols.findIndex((c) => c.id === over.id);
+  //     const newCols = move(cols, oldIndex, newIndex);
+  //     const updatedCols = newCols.map((c, i) => ({ ...c, order: i }));
+  //     setCols(updatedCols);
+  //     startTransition(async () => {
+  //       const res = await reorderColumnAction({ boardId: props.id, updates: updatedCols });
+  //       // revert to old columns if reorder errors.
+  //       if (!res.success) {
+  //         setCols(oldCols);
+  //         toast.error(res.message);
+  //       }
+  //     });
+  //   }
 
-    // TODO: Add card reorder & sorting
-    if (activeData?.type === 'card') {
-      // here TS knows `columnId` exists
-      const fromColId = activeData.columnId;
-    }
-  }
+  //   // TODO: Add card reorder & sorting
+  //   if (activeData?.type === 'card') {
+  //     // here TS knows `columnId` exists
+  //     const fromColId = activeData.columnId;
+  //   }
+  // }
 
   return (
-    <DndContext
-      id={'dnd-column-card-context'}
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragEnd={handleDragEnd}
+    <DragDropProvider
+      onDragStart={() => {
+        prevCols.current = cols;
+      }}
+      onDragOver={(event) => {
+        const { source, target } = event.operation;
+        console.log(`${source?.id} ${source?.type} is over ${target?.id} ${target?.type}`);
+      }}
+      onDragEnd={(event) => {
+        const { source, target } = event.operation;
+        if (target) {
+          console.log(`Dropped ${source?.id} onto ${target.id}`);
+        }
+      }}
     >
       <div className="flex flex-nowrap h-[calc(100%-1.5rem)] gap-4 p-4 items-start overflow-y-hidden green-gradient">
-        <SortableContext items={cols} strategy={horizontalListSortingStrategy}>
-          {cols.map((c) => (
-            <Column key={c.id} {...c}>
-              {c.card.length === 0 ? (
-                <div className="text-center border-foreground/40 border border-dashed rounded-md py-2">
-                  Drop cards here
-                </div>
-              ) : (
-                c.card.map((ca) => <ColumnCard key={ca.id} {...ca} boardId={props.id} />)
-              )}
-            </Column>
-          ))}
-        </SortableContext>
+        {cols.map((c) => (
+          <Column key={c.id} {...c}>
+            {c.card.length === 0 ? (
+              <div className="text-center border-foreground/40 border border-dashed rounded-md py-2">
+                Drop cards here
+              </div>
+            ) : (
+              c.card.map((ca) => <ColumnCard key={ca.id} {...ca} boardId={props.id} />)
+            )}
+          </Column>
+        ))}
 
         <div className="shrink-0">
           <ResponsiveModal
@@ -101,6 +91,6 @@ export default function Board(props: BoardWithColumns) {
       </div>
       {/* TODO: style loader */}
       {isPending && <div className="fixed bottom-0 right-0">Saving...</div>}
-    </DndContext>
+    </DragDropProvider>
   );
 }
